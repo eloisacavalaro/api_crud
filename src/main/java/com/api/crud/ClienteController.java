@@ -2,6 +2,7 @@ package com.api.crud;
 
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -56,14 +57,16 @@ public class ClienteController {
     }
 
     // Deletar um cliente - delete
-    @DeleteMapping
-    public String deleteCliente(UUID id) {
-        for (Cliente cliente : Cliente.clientes) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCliente(@PathVariable UUID id) {
+        for (int i = 0; i < Cliente.clientes.size(); i++) {
+            Cliente cliente = Cliente.clientes.get(i);
             if (cliente.getId().equals(id)) {
-                Cliente.clientes.remove(cliente);
+                Cliente.clientes.remove(i);
+                return ResponseEntity.ok("Cliente deletado com sucesso!");
             }
         }
-        return "Cliente Deletado Com Sucesso";
+        return ResponseEntity.status(404).body("Cliente não encontrado.");
     }
 
 }
