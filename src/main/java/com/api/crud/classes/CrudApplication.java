@@ -1,4 +1,4 @@
-package com.api.crud;
+package com.api.crud.classes;
 
 
 import org.springframework.boot.SpringApplication;
