@@ -1,44 +1,31 @@
 package com.api.crud.classes;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-
-@Data
+@EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "conta bancaria")
+@Data
+@Table(name = "contas")
 public class ContaBancaria {
-    public static ArrayList<ContaBancaria> contas = new ArrayList<ContaBancaria>();
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private Long id;
 
-    @ManyToOne
+    @Column(nullable = false)
+    private Double saldo = 0.0;
+
+    @OneToOne
+    @JoinColumn(name = "Clientes_id", referencedColumnName = " id")
     private Cliente cliente;
 
-    @Column(nullable = false, unique = true)
-    private String numeroConta;
-
-     @Column(nullable = false)
-    private BigDecimal saldo = BigDecimal.ZERO;
-
-    public BigDecimal getSaldo() {
-        return saldo;
+    // Verificar o saldo antes de realizar a transferência
+    public boolean temSaldo(double valor){
+        if(this.getSaldo() >= valor) {
+            return true;
+        } 
+        return false;
     }
-
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
-    }
-    
 
 }

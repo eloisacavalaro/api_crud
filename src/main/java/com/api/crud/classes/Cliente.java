@@ -1,47 +1,40 @@
 package com.api.crud.classes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.Data;
 
-@Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
 @Entity
+@Data
 @Table(name = "clientes")
 public class Cliente {
-    public static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(nullable = false)
     private String nome;
-
-    @Column(nullable = false, unique = true, length = 11)
+    
+    @Column(nullable = false, length = 11, unique = true)
     private String cpf;
-
-    @OneToOne
-    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
-    private Endereco endereco;
-
+    
     @Column(length = 11)
     private String telefone;
 
     @Column(unique = true)
     private String email;
 
-    @Column(name = "dataNascimento")
-    private LocalDate dataNascimento;
+    @Column(name = "data_nascimento")
+    private LocalDate datanascimento;
+
+    @OneToOne
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
+
+    @Column(name = "cliente_ativo", nullable = false)
+    private boolean ativo = true;
+
 }

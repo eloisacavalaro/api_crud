@@ -1,16 +1,12 @@
 package com.api.crud.classes.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.api.crud.classes.Cliente;
-import com.api.crud.classes.Endereco;
 import com.api.crud.classes.repository.ClienteRepository;
-import com.api.crud.classes.repository.EnderecoRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
@@ -18,54 +14,59 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @Autowired
-    private EnderecoRepository enderecoRepository;
-
-    @Transactional
     public Cliente create(Cliente cliente) {
-        Endereco endereco = cliente.getEndereco();
-        if (endereco != null) {
-            endereco = enderecoRepository.save(endereco);
-            cliente.setEndereco(endereco);
-        }
         return clienteRepository.save(cliente);
     }
 
     public List<Cliente> getAll() {
-        return clienteRepository.findAll();                   
+        return clienteRepository.findAll();
+    }
+    public List<Cliente> getAllAtivos(){
+        return clienteRepository.findByAtivoTrue();
     }
 
-    public Cliente getById(Long id){
-        return clienteRepository.findById(id)
-                                .orElse(null);
+    public Cliente getById(Long id) {
+        return clienteRepository.findById(id).orElse(null);
     }
 
-    @Transactional
-    public Cliente update(Long id, Cliente cliente) {
-        Cliente clienteExistente = getById(id);
+    public Cliente atualizarCliente(Cliente clienteSalvo, Cliente clienteNovo) {
 
-        if (clienteExistente == null){
-            return null;
+        if (clienteNovo.getNome() != null) {
+            clienteSalvo.setNome(clienteNovo.getNome());
+        }
+        if (clienteNovo.getCpf() != null) {
+            clienteSalvo.setCpf(clienteNovo.getCpf());
+        }
+        if (clienteNovo.getTelefone() != null) {
+            clienteSalvo.setTelefone(clienteNovo.getTelefone());
+        }
+        if (clienteNovo.getDatanascimento() != null) {
+            clienteSalvo.setDatanascimento(clienteNovo.getDatanascimento());
+        }
+        if (clienteNovo.getEndereco() != null) {
+            clienteSalvo.setEndereco(clienteNovo.getEndereco());
+        }
+        if (clienteNovo.getEmail() != null) {
+            clienteSalvo.setEmail(clienteNovo.getEmail());  
+        }
+        if (clienteNovo.isAtivo() == false) {
+            clienteSalvo.setAtivo(false);
         }
 
-        Endereco endereco = cliente.getEndereco();
-        if (endereco != null) {
-            endereco = enderecoRepository.save(endereco);
-            cliente.setEndereco(endereco);
-        }
-
-        clienteExistente.setNome(cliente.getNome());
-        clienteExistente.setCpf(cliente.getCpf());
-        clienteExistente.setEndereco(cliente.getEndereco());
-        clienteExistente.setTelefone(cliente.getTelefone());
-        clienteExistente.setEmail(cliente.getEmail());
-        clienteExistente.setDataNascimento(cliente.getDataNascimento());
-
-        return clienteRepository.save(clienteExistente);
+        return clienteRepository.save(clienteSalvo);
     }
 
-    public void delete(Long id){
-        clienteRepository.deleteById(id);
+    public Cliente delete(Long id) {
+        
+        // clienteRepository.deleteById(id);
+
+        Cliente cliente = getById(id);
+
+        Cliente clienteInativo = new Cliente();
+        clienteInativo.setAtivo(false);
+
+        return atualizarCliente(cliente, clienteInativo);
+
     }
 }
 
