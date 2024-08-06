@@ -16,6 +16,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    //criar cliente
     @PostMapping
     public ResponseEntity<?> criarClientes(@RequestBody Cliente cliente) {
         try {
@@ -25,6 +26,8 @@ public class ClienteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //buscar clientes ativos
     @GetMapping("/ativos")
     public ResponseEntity<List<Cliente>> getAllAtivos(){
         List<Cliente> clientes = clienteService.getAllAtivos();
@@ -32,12 +35,14 @@ public class ClienteController {
         
     }
 
+    //listar clientes
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = clienteService.getAll();
         return ResponseEntity.ok(clientes);
     }
 
+    //buscar cliente por id 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
         Cliente cliente = clienteService.getById(id);
@@ -48,6 +53,7 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
+    //atualizar cliente
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         Cliente clienteSalvo = clienteService.getById(id);
@@ -61,6 +67,7 @@ public class ClienteController {
 
     }
 
+    //deletar cliente
     @DeleteMapping("/{id}")
     public ResponseEntity<Cliente> deletarCliente(@PathVariable Long id) {
         
