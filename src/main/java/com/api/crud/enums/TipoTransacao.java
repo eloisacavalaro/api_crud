@@ -1,4 +1,4 @@
-package com.api.crud.classes.tipotransacao;
+package com.api.crud.enums;
 
 public enum TipoTransacao {
 

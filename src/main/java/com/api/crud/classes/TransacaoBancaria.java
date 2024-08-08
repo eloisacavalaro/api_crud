@@ -1,6 +1,8 @@
 package com.api.crud.classes;
 
-import com.api.crud.classes.tipotransacao.TipoTransacao;
+import java.time.LocalDateTime;
+
+import com.api.crud.enums.TipoTransacao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,23 +21,27 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "transacoes")
 public class TransacaoBancaria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private double valor;
+
+    // Tipo de transação é um ENUM
     @Column(nullable = false)
     @Enumerated
     private TipoTransacao tipoTransacao;
 
     @Column(nullable = false)
-    private double valor;
+    private LocalDateTime data = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "conta_origem", referencedColumnName = "id")
+    @JoinColumn(name = "conta_origem_id", referencedColumnName = "numeroConta")
     private ContaBancaria contaOrigem;
 
     @ManyToOne
-    @JoinColumn(name = "conta_destino", referencedColumnName = "id")
+    @JoinColumn(name = "conta_destino_id", referencedColumnName = "numeroConta")
     private ContaBancaria contaDestino;
 
 }

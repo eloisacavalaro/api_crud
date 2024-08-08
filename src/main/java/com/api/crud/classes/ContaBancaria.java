@@ -1,31 +1,37 @@
 package com.api.crud.classes;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Data
 @EqualsAndHashCode(of = "id")
 @Entity
-@Data
-@Table(name = "contas")
+@Table(name = "contas_bancarias")
 public class ContaBancaria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)    
-    private Long id;
+    
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long numeroConta;
 
     @Column(nullable = false)
-    private Double saldo = 0.0;
+    private double saldo = 0.0;
 
     @OneToOne
-    @JoinColumn(name = "Clientes_id", referencedColumnName = " id")
-    private Cliente cliente;
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id", nullable = false)
+    private Cliente titular;
 
-    // Verificar o saldo antes de realizar a transferência
-    public boolean temSaldo(double valor){
-        if(this.getSaldo() >= valor) {
-            return true;
-        } 
-        return false;
+    public void depositar(double valor) {
+        saldo += valor;
+    }
+    public void sacar(double valor) {
+        saldo -= valor;
     }
 
 }
